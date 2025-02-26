@@ -21,10 +21,10 @@ import TableCommandBar from "./TableCommandBar";
 import UserFormDialog from "./UserFormDialog";
 
 interface User {
-  id: number;
+  id: string;
   displayName: string;
-  name: string;
   createdAt: string,
+  role: "admin" | "USER" | "manager";
   status: "active" | "inactive" | "pending";
 }
 
@@ -32,7 +32,7 @@ interface UsersTableProps {
   users?: User[];
   onEdit?: (user: User) => void;
   onDelete?: (user: User) => void;
-  onBulkAction?: (action: string, userIds: number[]) => void;
+  onBulkAction?: (action: string, userIds: string[]) => void;
   onSearch?: (query: string) => void;
 }
 
@@ -43,7 +43,7 @@ const UsersTable = ({
   onSearch = () => {},
 }: UsersTableProps) => {
   const [users, setUsers] = React.useState<User[]>([]);
-  const [selectedUsers, setSelectedUsers] = React.useState<number[]>([]);
+  const [selectedUsers, setSelectedUsers] = React.useState<string[]>([]);
   const [showUserForm, setShowUserForm] = React.useState(false);
   const [editingUser, setEditingUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -57,7 +57,8 @@ const UsersTable = ({
         const response = await fetch("https://bbsmarthomes.com/users"); // Replace with your API URL
         if (!response.ok) throw new Error("Failed to fetch users");
         console.log(response);
-  
+        
+
         const data = await response.json();
         setUsers(data);
       } catch (err) {
@@ -79,7 +80,7 @@ const UsersTable = ({
     }
   };
 
-  const handleSelectUser = (userId: number, checked: boolean) => {
+  const handleSelectUser = (userId: string, checked: boolean) => {
     if (checked) {
       setSelectedUsers([...selectedUsers, userId]);
     } else {
@@ -125,8 +126,7 @@ const UsersTable = ({
                 />
               </TableHead>
               <TableHead>ID</TableHead>
-              <TableHead>Line Name</TableHead>
-              <TableHead>System Name</TableHead>
+              <TableHead>Name</TableHead>
               <TableHead>Welcome date</TableHead>
               <TableHead className="w-12">Actions</TableHead>
             </TableRow>
@@ -144,7 +144,6 @@ const UsersTable = ({
                 </TableCell>
                 <TableCell>{user.id}</TableCell>
                 <TableCell>{user.displayName}</TableCell>
-                <TableCell>{user.name}</TableCell>
                 <TableCell>{user.createdAt}</TableCell>
                 {/* <TableCell>
                   <Badge variant={getStatusBadgeVariant(user.status)}>

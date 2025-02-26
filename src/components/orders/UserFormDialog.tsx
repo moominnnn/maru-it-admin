@@ -29,10 +29,9 @@ import {
 } from "@/components/ui/form";
 
 const userFormSchema = z.object({
-  id: z.number(),
-  displayName: z.string().min(2, "Name must be at least 2 characters"),
   name: z.string().min(2, "Name must be at least 2 characters"),
-  createdAt: z.string(),
+  email: z.string().email("Invalid email address"),
+  role: z.enum(["admin", "user", "manager"]),
   status: z.enum(["active", "inactive", "pending"]),
 });
 
@@ -52,15 +51,13 @@ export default function UserFormDialog({
   onSubmit = () => {},
   initialData = {},
   mode = "create",
-}: UserFormDialogProps) {  
-  console.log('initialData', initialData);
-  
+}: UserFormDialogProps) {
   const form = useForm<UserFormData>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
-      id: initialData.id || null,
-      displayName: initialData.displayName || '',
-      name: initialData.name || '',
+      name: initialData.name || "",
+      email: initialData.email || "",
+      role: initialData.role || "user",
       status: initialData.status || "active",
     },
   });
@@ -86,40 +83,12 @@ export default function UserFormDialog({
           >
             <FormField
               control={form.control}
-              name="id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ID</FormLabel>
-                  <FormControl>
-                    <Input defaultValue={initialData.id} disabled/>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="displayName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Line Name</FormLabel>
-                  <FormControl>
-                    <Input defaultValue={initialData.displayName} placeholder="John Doe" disabled />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="displayName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input defaultValue={initialData.name} placeholder="ระบุชื่อใน ระบบ" />
+                    <Input placeholder="John Doe" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -128,17 +97,69 @@ export default function UserFormDialog({
 
             <FormField
               control={form.control}
-              name="displayName"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Remark</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
-                      type="text"
-                      placeholder="หมายเหตุ"
+                      type="email"
+                      placeholder="john@example.com"
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="admin">Admin</SelectItem>
+                      <SelectItem value="manager">Manager</SelectItem>
+                      <SelectItem value="user">User</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="inactive">Inactive</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

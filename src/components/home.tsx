@@ -1,6 +1,7 @@
 import React from "react";
 import DashboardLayout from "./layout/DashboardLayout";
 import UsersTable from "./users/UsersTable";
+import { logout } from "../services/authService";
 
 interface HomeProps {
   user?: {
@@ -16,7 +17,9 @@ const Home = ({
     name: "John Doe",
     email: "john@example.com",
   },
-  onLogout = () => console.log("Logout clicked"),
+  onLogout = () => {
+    logout()
+  }
 }: HomeProps) => {
   const handleSearch = (query: string) => {
     console.log("Search query:", query);

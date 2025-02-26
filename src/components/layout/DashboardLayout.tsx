@@ -18,7 +18,7 @@ const DashboardLayout = ({
     name: "John Doe",
     email: "john@example.com",
   },
-  onLogout = () => console.log("Logout clicked"),
+  onLogout = () => console.log("Logout clicked 2"),
 }: DashboardLayoutProps) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);

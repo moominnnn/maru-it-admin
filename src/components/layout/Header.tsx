@@ -26,7 +26,7 @@ const Header = ({
     name: "John Doe",
     email: "john@example.com",
   },
-  onLogout = () => console.log("Logout clicked"),
+  onLogout = () => console.log("Logout clicked 3"),
   onThemeToggle = () => console.log("Theme toggle clicked"),
   isDarkMode = false,
 }: HeaderProps) => {
